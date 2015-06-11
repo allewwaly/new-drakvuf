@@ -1,0 +1,3 @@
+DRAKVUF v0.1
+To start on existing domain:  ./drakvuf -d <rekall profile> <domid> [injection pid] [injection executable path]
+To create clone domain: ./drakvuf -c <rekall profile> <origin> <vlan> [injection pid] [injection executable path]

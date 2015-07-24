@@ -262,7 +262,7 @@ void trap_guard(vmi_instance_t vmi, vmi_event_t *event) {
 }
 
 void int3_cb(vmi_instance_t vmi, vmi_event_t *event) {
-
+//printf("entering int3_cb ...");
     /*reg_t tsc, deltatsc;
      deltatsc = rdtsc();
      vmi_get_vcpureg(vmi, &tsc, TSC, event->vcpu_id);*/
@@ -276,6 +276,7 @@ void int3_cb(vmi_instance_t vmi, vmi_event_t *event) {
     honeymon_clone_t *clone = event->data;
     uint32_t pid=clone->pid;//self-defined
     addr_t pid_cr3=clone->cr3;//self-defined
+//    pid_cr3=vmi_pid_to_dtb(vmi,pid);
 //    vmi_read_addr_va(vmi,event->interrupt_event.gla,pid,&rip);
 //    char* rip=vmi_read_str_va(vmi,event->interrupt_event.gla,pid);
 //    unicode_string_t *rip = vmi_read_unicode_str_va(vmi,event->interrupt_event.gla,pid);
@@ -348,8 +349,23 @@ void int3_cb(vmi_instance_t vmi, vmi_event_t *event) {
     g_free(ts);
     //vmi_set_vcpureg(vmi, tsc+(rdtsc()-deltatsc), TSC, event->vcpu_id);
 }
-
-void inject_traps_pe(honeymon_clone_t *clone, addr_t vaddr, uint32_t pid, struct sym_config *sym_config) {
+/*
+char* return_trapdll(char *dllname){
+    if(!strcmp(dllname,"ntdll.dll"))
+	return *ntdll;
+    else if(!strcmp(dllname,"wininet.dll"))
+        return *wininet;
+    else if(!strcmp(dllname,"kernel32.dll"))
+        return *kernel32;
+    else if(!strcmp(dllname,"ws2_32.dll"))
+        return *ws2_32;
+    else if(!strcmp(dllname,"advapi32.dll"))
+        return *advapi32;
+    else
+	return NULL;
+}
+*/
+void inject_traps_pe(honeymon_clone_t *clone, addr_t vaddr, uint32_t pid, struct sym_config *sym_config, char *dllname) {
 
     vmi_instance_t vmi = clone->vmi;
 
@@ -360,109 +376,99 @@ void inject_traps_pe(honeymon_clone_t *clone, addr_t vaddr, uint32_t pid, struct
     addr_t dtb = vmi_pid_to_dtb(vmi, pid);
     uint8_t trap = TRAP;
 
-    uint32_t i = 0;
+    uint32_t i = 0,m=0,n=0;
     uint64_t trapped = 0;
-
-    for (; i < sym_config->sym_count; i++) {
-
-        const struct symbol *symbol = &sym_config->syms[i];
+    char* dllmodule;
 /*
-        //Kernel
-        if (
-                //strncmp(symbol->name, "ExAllocatePoolWithTag", 21)
-                //&& strcmp(symbol->name, "ExAllocatePoolWithQuotaTag")
-                //&& strncmp(symbol->name, "ObCreateObject", 14)
-                //&& strcmp(symbol->name, "ExFreePoolWithTag")
-                //&&strcmp(symbol->name, "NtSetInformationFile")
-                //&&strcmp(symbol->name, "ZwSetInformationFile")
-                //&&
-                //strncmp(symbol->name, "Nt", 2)
-                //&& strncmp(symbol->name, "Zw", 2)
-		strcmp(symbol->name,"LdrLoadDll")
-                && strcmp(symbol->name,"NtCreateFile")
-                && strcmp(symbol->name,"NtOpenFile")
-                && strcmp(symbol->name,"NtReadFile")
-                && strcmp(symbol->name,"NtWriteFile")
-                && strcmp(symbol->name,"NtDeleteFile")
-                && strcmp(symbol->name,"NtDeviceIoControlFile")
-                && strcmp(symbol->name,"NtQueryDirectoryFile")
-                && strcmp(symbol->name,"NtQueryInformationFile")
-                && strcmp(symbol->name,"NtSetInformationFile")
-                && strcmp(symbol->name,"NtOpenDirectoryObject")
-                && strcmp(symbol->name,"NtCreateDirectoryObject")
-                && strcmp(symbol->name,"NtCreateKey")
-                && strcmp(symbol->name,"NtOpenKey")
-                && strcmp(symbol->name,"NtOpenKeyEx")
-                && strcmp(symbol->name,"NtRenameKey")
-                && strcmp(symbol->name,"NtReplaceKey")
-                && strcmp(symbol->name,"NtEnumerateKey")
-                && strcmp(symbol->name,"NtEnumerateValueKey")
-                && strcmp(symbol->name,"NtSetValueKey")
-                && strcmp(symbol->name,"NtQueryValueKey")
-                && strcmp(symbol->name,"NtQueryMultipleValueKey")
-                && strcmp(symbol->name,"NtDeleteKey")
-                && strcmp(symbol->name,"NtDeleteValueKey")
-                && strcmp(symbol->name,"NtLoadKey")
-                && strcmp(symbol->name,"NtLoadKey2")
-                && strcmp(symbol->name,"NtLoadKeyEx")
-                && strcmp(symbol->name,"NtQueryKey")
-                && strcmp(symbol->name,"NtSaveKey")
-                && strcmp(symbol->name,"NtSaveKeyEx")
-                && strcmp(symbol->name,"NtCreateMutant")
-                && strcmp(symbol->name,"NtOpenMutant")
-                && strcmp(symbol->name,"NtCreateNamedPipeFile")
-                && strcmp(symbol->name,"NtCreateProcess")
-                && strcmp(symbol->name,"NtCreateProcessEx")
-                && strcmp(symbol->name,"NtCreateUserProcess")
-                && strcmp(symbol->name,"RtlCreateUserProcess")
-                && strcmp(symbol->name,"NtTerminateProcess")
-                && strcmp(symbol->name,"NtCreateSection")
-                && strcmp(symbol->name,"NtMakeTemporaryObject")
-                && strcmp(symbol->name,"NtMakePermanentObject")
-                && strcmp(symbol->name,"NtOpenSection")
-                && strcmp(symbol->name,"ZwMapViewOfSection")
-                && strcmp(symbol->name,"NtUnmapViewOfSection")
-                && strcmp(symbol->name,"NtReadVirtualMemory")
-                && strcmp(symbol->name,"NtWriteVirtualMemory")
-                && strcmp(symbol->name,"NtProtectVirtualMemory")
-                && strcmp(symbol->name,"NtFreeVirtualMemory")
-                && strcmp(symbol->name,"NtCreateThread")
-                && strcmp(symbol->name,"NtCreateThreadEx")
-                && strcmp(symbol->name,"NtOpenThread")
-                && strcmp(symbol->name,"NtGetContextThread")
-                && strcmp(symbol->name,"NtSetContextThread")
-                && strcmp(symbol->name,"NtSuspendThread")
-                && strcmp(symbol->name,"NtResumeThread")
-                && strcmp(symbol->name,"NtTerminateThread")
-                && strcmp(symbol->name,"RtlCreateUserThread")
-                && strcmp(symbol->name,"LdrGetDllHandle")
-                && strcmp(symbol->name,"LdrGetProcedureAddress")
-                && strcmp(symbol->name,"NtDelayExecution")
-                && strcmp(symbol->name,"NtQuerySystemTime")
-            ) continue;
+    for(;m<5;m++){
+	if(strcmp(dllname,trapdll[m])==0){
+            n=1;
+            dllmodule=return_trapdll(dllname);
+	    printf("dllmodule is %s",dllmodule);
+	    break;
+        }
+    }
+    if(n=0){
+	printf("no intended modules are trapped");
+	return;
+    }
 */
-	//printf("traped function is: %s/n",symbol->name);
-        uint32_t j = 0, k=0;
-	for(;j<62;j++){
-  	    if(strcmp(symbol->name,trapfuncs[j])==0){
+    for (; i < sym_config->sym_count; i++) {
+        const struct symbol *symbol = &sym_config->syms[i];
+//	printf("traped function is: %s\n",symbol->name);
+        uint32_t  k=0;
+if(!strcasecmp(dllname,"ntdll.dll")){
+	for(uint32_t j=0 ;j<62;j++){
+//    	    printf("intended trapping function name is:%s\n", module_function[NTDLL][j]);
+  	    if(strcmp(symbol->name,module_function[NTDLL][j])==0){
 		k=1;
+		printf("%s is going to be trapped\n",symbol->name);
 	    	break;
 	    }
 	}
-	if(k==0)
-	    continue;
+}
+else if(!strcasecmp(dllname,"kernel32.dll")){
+	for(uint32_t j=0 ;j<24;j++){
+//    	    printf("intended trapping function name is:%s\n", module_function[KERNEL32][j]);
+  	    if(strcmp(symbol->name,module_function[KERNEL32][j])==0){
+		k=1;
+		printf("%s is going to be trapped\n",symbol->name);
+	    	break;
+	    }
+	}
+}
+else if(!strcasecmp(dllname,"ws2_32.dll")){
+	for(uint32_t j=0 ;j<24;j++){
+//    	    printf("intended trapping function name is:%s\n", module_function[WS2_32][j]);
+  	    if(strcmp(symbol->name,module_function[WS2_32][j])==0){
+		k=1;
+		printf("%s is going to be trapped\n",symbol->name);
+	    	break;
+	    }
+	}
+}
+else if(!strcasecmp(dllname,"wininet.dll")){
+	for(uint32_t j=0 ;j<13;j++){
+//    	    printf("intended trapping function name is:%s\n", module_function[WININET][j]);
+  	    if(strcmp(symbol->name,module_function[WININET][j])==0){
+		k=1;
+		printf("%s is going to be trapped\n",symbol->name);
+	    	break;
+	    }
+	}
+}
+else if(!strcasecmp(dllname,"advapi32.dll")){
+	for(uint32_t j=0 ;j<30;j++){
+//    	    printf("intended trapping function name is:%s\n", module_function[ADVAPI32][j]);
+  	    if(strcmp(symbol->name,module_function[ADVAPI32][j])==0){
+		k=1;
+		printf("%s is going to be trapped\n",symbol->name);
+	    	break;
+	    }
+	}
+}
 
+else{
+//	printf("module %s is not in trapping list\n",dllname);
+	break;
+}
+if(k==0){
+//	printf("function %s is not in trapping list\n",symbol->name);
+	continue;
+}
         // get pa
         addr_t pa = vmi_pagetable_lookup(vmi, dtb,
                 vaddr + sym_config->syms[i].rva);
 
-        if (!pa)
+        if (!pa){
+//	    printf("pa cannot found by symbols!\n");
             continue;
-
+	}
         // check if already marked
-        if (g_hash_table_lookup(clone->pa_lookup, &pa))
+        if (g_hash_table_lookup(clone->pa_lookup, &pa)){
+	    printf("pa already marked/n");
             continue;
-
+	}
         // backup current byte
         uint8_t byte = 0;
         vmi_read_8_pa(vmi, pa, &byte);
@@ -525,17 +531,16 @@ void inject_traps_pe(honeymon_clone_t *clone, addr_t vaddr, uint32_t pid, struct
         // save trap location into lookup tree
         g_hash_table_insert(clone->pa_lookup, g_memdup(&container->pa, 8),
                 &container->symbol);
-
         trapped++;
         printf(
                 "\t\tTrap added @ VA 0x%lx PA 0x%lx Page %lu for %s!%s. Backup: 0x%x.\n",
                 vaddr + sym_config->syms[i].rva, container->pa,
-                pa >> 12, sym_config->name,
-                sym_config->syms[i].name,
+                pa >> 12, dllname,
+                symbol->name,
                 container->symbol.backup);
     }
 
-    printf("\tInjected %lu traps into PID %i\n", trapped, pid);
+    printf("\tInjected %lu traps into PID %i Module %s\n", trapped, pid, dllname);
 
 }
 
@@ -584,7 +589,7 @@ void inject_traps_modules(honeymon_clone_t *clone, addr_t list_head,
             //TODO: We only care about the kernel at this point
 //            if((!strcmp((char*)out.contents,"ntoskrnl.exe"))||(!strcmp((char*)out.contents,"tcpip.sys")) {
 //	    if(!strcmp((char*)out.contents,"ntoskrnl.exe")) {
-              inject_traps_pe(clone, dllbase, pid, clone->origin->sym_config);
+              inject_traps_pe(clone, dllbase, pid, clone->origin->sym_config, (char*)out.contents);//add dllname
 //            }
             free(out.contents);
         }
@@ -601,7 +606,7 @@ void inject_traps(honeymon_clone_t *clone) {
     // Loop kernel modules
     addr_t kernel_list_head;
     vmi_read_addr_ksym(vmi, "PsLoadedModuleList", &kernel_list_head);
-//    inject_traps_modules(clone, kernel_list_head, 0);
+    inject_traps_modules(clone, kernel_list_head, 0);
 
     addr_t current_process = 0, next_list_entry = 0;
     vmi_read_addr_ksym(vmi, "PsInitialSystemProcess", &current_process);
@@ -673,21 +678,23 @@ void *clone_vmi_thread(void *input) {
     honeymon_clone_t *clone = (honeymon_clone_t *) input;
 
     clone->interrupted = 0;
-
+printf("test\n");
     vmi_event_t interrupt_event;
     memset(&interrupt_event, 0, sizeof(vmi_event_t));
     interrupt_event.type = VMI_EVENT_INTERRUPT;
     interrupt_event.interrupt_event.intr = INT3;
     interrupt_event.callback = int3_cb;
     interrupt_event.data = clone;
-
-    vmi_register_event(clone->vmi, &interrupt_event);
-
+printf("before registed\n");
+    if(vmi_register_event(clone->vmi, &interrupt_event)==VMI_SUCCESS)
+	printf("int3 event registered!\n");
+    else
+	printf("int3 event register failed\n");
     read_count = write_count = x_count = 0;
 
     vmi_resume_vm(clone->vmi);
     clone->timer = g_timer_new();
-
+printf("clone->interrupted is: %u", clone->interrupted);
     while (!clone->interrupted) {
         //printf("Waiting for events in DRAKVUF...\n");
         status_t status = vmi_events_listen(clone->vmi, 100);
@@ -698,7 +705,7 @@ void *clone_vmi_thread(void *input) {
         if ( VMI_SUCCESS != status ) {
             printf("Error waiting for events or timout, quitting...\n");
             clone->interrupted = -1;
-        }
+    	}
     }
 
     vmi_pause_vm(clone->vmi);

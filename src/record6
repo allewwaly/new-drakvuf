@@ -1,0 +1,219 @@
+DRAKVUF v0.1
+The Rekall profile defines 11313 functions
+Init VMI on domID 40 -> win7
+Rekall profile: structure member 'Rip' not found
+Failed to find offset for _KTRAP_FRAME:Rip
+Found process: [PID:     4, CR3: 0x185000] System
+Found process: [PID:   248, CR3: 0x3ce53020] smss.exe
+Found process: [PID:   324, CR3: 0x3ce53060] csrss.exe
+Found process: [PID:   360, CR3: 0x3ce530a0] wininit.exe
+Found process: [PID:   372, CR3: 0x3ce53040] csrss.exe
+Found process: [PID:   432, CR3: 0x3ce530c0] winlogon.exe
+Found process: [PID:   468, CR3: 0x3ce53080] services.exe
+Found process: [PID:   484, CR3: 0x3ce53100] lsass.exe
+Found process: [PID:   492, CR3: 0x3ce53120] lsm.exe
+Found process: [PID:   600, CR3: 0x3ce53140] svchost.exe
+Found process: [PID:   672, CR3: 0x3ce53160] svchost.exe
+Found process: [PID:   724, CR3: 0x3ce53180] svchost.exe
+Found process: [PID:   848, CR3: 0x3ce531c0] svchost.exe
+Found process: [PID:   876, CR3: 0x3ce531e0] svchost.exe
+Found process: [PID:   992, CR3: 0x3ce53200] svchost.exe
+Found process: [PID:  1068, CR3: 0x3ce53220] svchost.exe
+Found process: [PID:  1176, CR3: 0x3ce53240] spoolsv.exe
+Found process: [PID:  1212, CR3: 0x3ce53260] svchost.exe
+Found process: [PID:  1716, CR3: 0x3ce53280] taskhost.exe
+Found process: [PID:  1788, CR3: 0x3ce532c0] sppsvc.exe
+Found process: [PID:  2016, CR3: 0x3ce532a0] dwm.exe
+Found process: [PID:  2028, CR3: 0x3ce531a0] explorer.exe
+Found process: [PID:  1284, CR3: 0x3ce530e0] taskmgr.exe
+Found process: [PID:  1868, CR3: 0x3ce53340] SearchIndexer.
+Found process: [PID:   276, CR3: 0x3ce53360] iexplore.exe
+Found process: [PID:  1344, CR3: 0x3ce53380] iexplore.exe
+Inject traps in module list of PID 1344
+	iexplore.exe @ 0x1110000
+	Injected 0 traps into PID 1344
+	ntdll.dll @ 0x779a0000
+NtDeleteKey is going to be trapped
+		New memory event trap set on page 13978
+		Trap added @ VA 0x77b8d911 PA 0x369a911 Page 13978 for ntdll.dll!NtDeleteKey. Backup: 0xe4.
+NtTerminateThread is going to be trapped
+NtReadFile is going to be trapped
+NtQueryInformationFile is going to be trapped
+NtMakeTemporaryObject is going to be trapped
+NtCreateProcess is going to be trapped
+NtLoadKey2 is going to be trapped
+NtCreateKey is going to be trapped
+		New memory event trap set on page 34009
+		Trap added @ VA 0x77ba2e2a PA 0x84d9e2a Page 34009 for ntdll.dll!NtCreateKey. Backup: 0x75.
+NtLoadKeyEx is going to be trapped
+NtSaveKeyEx is going to be trapped
+NtCreateSection is going to be trapped
+NtSetInformationFile is going to be trapped
+NtQueryDirectoryFile is going to be trapped
+NtFreeVirtualMemory is going to be trapped
+NtSaveKey is going to be trapped
+NtDeleteValueKey is going to be trapped
+		New memory event trap set on page 96014
+		Trap added @ VA 0x77b7f328 PA 0x1770e328 Page 96014 for ntdll.dll!NtDeleteValueKey. Backup: 0x5d.
+NtWriteFile is going to be trapped
+NtQueryMultipleValueKey is going to be trapped
+		New memory event trap set on page 95505
+		Trap added @ VA 0x77b82cc0 PA 0x17511cc0 Page 95505 for ntdll.dll!NtQueryMultipleValueKey. Backup: 0x0.
+NtCreateThread is going to be trapped
+NtCreateFile is going to be trapped
+NtCreateThreadEx is going to be trapped
+NtCreateDirectoryObject is going to be trapped
+		New memory event trap set on page 33947
+		Trap added @ VA 0x77ba4505 PA 0x849b505 Page 33947 for ntdll.dll!NtCreateDirectoryObject. Backup: 0xfd.
+NtProtectVirtualMemory is going to be trapped
+NtOpenKeyEx is going to be trapped
+NtOpenThread is going to be trapped
+NtCallbackReturn is going to be trapped
+NtQueryValueKey is going to be trapped
+NtMakePermanentObject is going to be trapped
+NtCreateMutant is going to be trapped
+NtEnumerateValueKey is going to be trapped
+NtOpenFile is going to be trapped
+NtOpenSection is going to be trapped
+NtWriteVirtualMemory is going to be trapped
+NtDelayExecution is going to be trapped
+NtEnumerateKey is going to be trapped
+NtCreateProcessEx is going to be trapped
+NtLoadKey is going to be trapped
+NtQuerySystemTime is going to be trapped
+NtDeviceIoControlFile is going to be trapped
+NtDeleteFile is going to be trapped
+NtOpenDirectoryObject is going to be trapped
+NtResumeThread is going to be trapped
+NtOpenMutant is going to be trapped
+NtReplaceKey is going to be trapped
+NtTerminateProcess is going to be trapped
+NtRenameKey is going to be trapped
+NtSetContextThread is going to be trapped
+NtReadVirtualMemory is going to be trapped
+NtCreateNamedPipeFile is going to be trapped
+NtCreateUserProcess is going to be trapped
+NtGetContextThread is going to be trapped
+NtUnmapViewOfSection is going to be trapped
+NtOpenKey is going to be trapped
+NtQueryKey is going to be trapped
+NtSetValueKey is going to be trapped
+NtSuspendThread is going to be trapped
+RtlCreateUserProcess is going to be trapped
+ZwMapViewOfSection is going to be trapped
+		New memory event trap set on page 130429
+		Trap added @ VA 0x779dc474 PA 0x1fd7d474 Page 130429 for ntdll.dll!ZwMapViewOfSection. Backup: 0x70.
+	Injected 6 traps into PID 1344
+	kernel32.dll @ 0x76c70000
+	Injected 0 traps into PID 1344
+	KERNELBASE.dll @ 0x75d80000
+	Injected 0 traps into PID 1344
+	ADVAPI32.dll @ 0x76bd0000
+	Injected 0 traps into PID 1344
+	msvcrt.dll @ 0x762d0000
+	Injected 0 traps into PID 1344
+	sechost.dll @ 0x76a40000
+	Injected 0 traps into PID 1344
+	RPCRT4.dll @ 0x76450000
+	Injected 0 traps into PID 1344
+	USER32.dll @ 0x76380000
+	Injected 0 traps into PID 1344
+	GDI32.dll @ 0x77af0000
+	Injected 0 traps into PID 1344
+	LPK.dll @ 0x75df0000
+	Injected 0 traps into PID 1344
+	USP10.dll @ 0x76b30000
+	Injected 0 traps into PID 1344
+	SHLWAPI.dll @ 0x77b70000
+	Injected 0 traps into PID 1344
+	SHELL32.dll @ 0x76d50000
+	Injected 0 traps into PID 1344
+	ole32.dll @ 0x76090000
+	Injected 0 traps into PID 1344
+	iertutil.dll @ 0x76840000
+	Injected 0 traps into PID 1344
+	urlmon.dll @ 0x76540000
+	Injected 0 traps into PID 1344
+	WININET.dll @ 0x75e90000
+	Injected 0 traps into PID 1344
+	OLEAUT32.dll @ 0x75e00000
+	Injected 0 traps into PID 1344
+	CRYPT32.dll @ 0x75c60000
+	Injected 0 traps into PID 1344
+	MSASN1.dll @ 0x75b60000
+	Injected 0 traps into PID 1344
+	IMM32.DLL @ 0x76680000
+	Injected 0 traps into PID 1344
+	MSCTF.dll @ 0x76a60000
+	Injected 0 traps into PID 1344
+	IEFRAME.dll @ 0x6fb60000
+	Injected 0 traps into PID 1344
+	PSAPI.DLL @ 0x76070000
+	Injected 0 traps into PID 1344
+	OLEACC.dll @ 0x70e60000
+	Injected 0 traps into PID 1344
+	comctl32.dll @ 0x75730000
+	Injected 0 traps into PID 1344
+	comdlg32.dll @ 0x75ff0000
+	Injected 0 traps into PID 1344
+	IEShims.dll @ 0x6f3d0000
+	Injected 0 traps into PID 1344
+	CRYPTBASE.dll @ 0x75a40000
+	Injected 0 traps into PID 1344
+	uxtheme.dll @ 0x74810000
+	Injected 0 traps into PID 1344
+	RpcRtRemote.dll @ 0x75ae0000
+	Injected 0 traps into PID 1344
+	dwmapi.dll @ 0x744e0000
+	Injected 0 traps into PID 1344
+	CLBCatQ.DLL @ 0x76240000
+	Injected 0 traps into PID 1344
+	propsys.dll @ 0x74850000
+	Injected 0 traps into PID 1344
+	ntmarta.dll @ 0x72170000
+	Injected 0 traps into PID 1344
+	WLDAP32.dll @ 0x761f0000
+	Injected 0 traps into PID 1344
+	profapi.dll @ 0x75af0000
+	Injected 0 traps into PID 1344
+	CRYPTSP.dll @ 0x75320000
+	Injected 0 traps into PID 1344
+	rsaenh.dll @ 0x750c0000
+	Injected 0 traps into PID 1344
+	SETUPAPI.dll @ 0x766a0000
+	Injected 0 traps into PID 1344
+	CFGMGR32.dll @ 0x75c30000
+	Injected 0 traps into PID 1344
+	DEVOBJ.dll @ 0x75dd0000
+	Injected 0 traps into PID 1344
+	ieproxy.dll @ 0x6f4e0000
+	Injected 0 traps into PID 1344
+	SspiCli.dll @ 0x759d0000
+	Injected 0 traps into PID 1344
+	ws2_32.DLL @ 0x76500000
+	Injected 0 traps into PID 1344
+	NSI.dll @ 0x76080000
+	Injected 0 traps into PID 1344
+	dnsapi.DLL @ 0x751a0000
+	Injected 0 traps into PID 1344
+	iphlpapi.DLL @ 0x73960000
+	Injected 0 traps into PID 1344
+	WINNSI.DLL @ 0x73950000
+	Injected 0 traps into PID 1344
+	apphelp.dll @ 0x759f0000
+	Injected 0 traps into PID 1344
+	VERSION.dll @ 0x74d60000
+	Injected 0 traps into PID 1344
+	RASAPI32.dll @ 0x70f20000
+	Injected 0 traps into PID 1344
+	rasman.dll @ 0x724b0000
+	Injected 0 traps into PID 1344
+	rtutils.dll @ 0x74150000
+	Injected 0 traps into PID 1344
+	sensapi.dll @ 0x722a0000
+	Injected 0 traps into PID 1344
+	mswsock.dll @ 0x752e0000
+	Injected 0 traps into PID 1344
+	wshtcpip.dll @ 0x74df0000
+	Injected 0 traps into PID 1344
+	Normali

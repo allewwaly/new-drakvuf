@@ -11,6 +11,6 @@ WININET,
 ADVAPI32,
 MAX
 
-usage:  ./drakvuf -d <rekall profile> <domid> [injection pid]
+usage:  ./drakvuf -d rekall-profile domid pid
 
 the user-level dlls' rekall profile is manufactually generated and merged with guide at http://rekall-forensic.blogspot.com/2014/02/the-rekall-profile-repository-and.html

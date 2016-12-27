@@ -1,5 +1,7 @@
 new-drakvuf based on drakvuf at https://github.com/tklengyel/drakvuf
 
+tested with xen 4.4 and ubuntu 1404
+
 add feature of specifying pid to monitor
 
 add support of monitoring user-level function calls, including these of:
